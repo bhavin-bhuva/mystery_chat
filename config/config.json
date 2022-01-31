@@ -1,0 +1,26 @@
+{
+  "local": {
+    "host": "localhost",
+    "database": "mystery_chat",
+    "username": "postgres",
+    "password": "root",
+    "port": 5432,
+    "dialect": "postgres",
+    "logging": true,
+    "migrationStorageTableName": "sequelize_meta"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

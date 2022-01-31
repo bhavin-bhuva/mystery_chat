@@ -1,0 +1,62 @@
+{
+  "name": "mystery_chat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "NODE_ENV=local nodemon start",
+    "start": "NODE_ENV=production node server.js",
+    "watch:win": "set NODE_ENV=local && nodemon start",
+    "start:win": "set NODE_ENV=local && node server.js",
+    "start-production": "node server.js",
+    "start-pm2": "sudo pm2 start server.js --name app",
+    "deploy": "serverless deploy",
+    "pretty": "prettier --write \"./**/*.{js,jsx,json}\"",
+    "kill-port": "sudo kill -9 $(sudo lsof -t -i:8081)"
+  },
+  "watch": {
+    "start": "*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bhavin-Bhuva/santo_ki_bate.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bhavin-Bhuva/santo_ki_bate/issues"
+  },
+  "homepage": "https://github.com/Bhavin-Bhuva/santo_ki_bate#readme",
+  "dependencies": {
+    "aws-serverless-express": "^3.4.0",
+    "bcryptjs": "^2.4.3",
+    "busboy": "^0.3.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "express-jwt": "^6.0.0",
+    "express-kun": "^1.0.24",
+    "express-multipart-file-parser": "^0.1.2",
+    "express-rate-limit": "^5.2.6",
+    "fcm-node": "^1.3.0",
+    "fs": "^0.0.1-security",
+    "googleapis": "^92.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mailgun-js": "^0.6.7",
+    "mime": "^1.6.0",
+    "moment": "^2.29.1",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.6.1",
+    "otp-generator": "^2.0.0",
+    "pg": "^8.6.0",
+    "sequelize": "^6.6.2",
+    "socket.io": "^4.4.1",
+    "uuidv4": "^6.2.12",
+    "validatorjs": "^3.22.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "sequelize-cli": "^6.4.1"
+  }
+}
