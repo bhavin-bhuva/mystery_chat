@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+const uuid = require('uuid');
 
 const isUser = (users, nickname) => nickname in users;
 
@@ -25,7 +25,7 @@ const delUser = (users, nickname) => {
 };
 
 const createMessage = (message, sender) => ({
-  id: uuid(),
+  id: uuid.v4(),
   time: new Date(Date.now()),
   message,
   sender,
