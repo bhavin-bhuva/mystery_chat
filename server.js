@@ -6,14 +6,14 @@ const app = express();
 const port = process.env.PORT || 3000;
 var server = require('http').Server(app);
 const io = require('socket.io')(server);
-const socketManage = require('./routes/chat-socket/socketManage')(io)
+const socketManage = require('./routes/chat-socket/socketManage')(io);
 
 const publicRoutes = [/\/auth\/*/, '/user/register'];
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-io.on('connection', socketManage )
+io.on('connection', socketManage);
 
 app.use(
   jwt({
@@ -38,11 +38,11 @@ app.use((err, req, res, next) => {
 
 app.use('/', corsmw, require('./api'));
 if (process.env.NODE_ENV == 'local') {
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`Server listening on \nURL -> http://localhost:${port}`);
   });
 } else {
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`Server listening on \nURL -> http://localhost:${port}`);
   });
 }
