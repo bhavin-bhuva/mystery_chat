@@ -3,16 +3,14 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return Promise.all([
-      await queryInterface.createTable('notifications', {
+      await queryInterface.createTable('chats', {
         id: {
           primaryKey: true,
           type: Sequelize.UUID,
           defaultValue: Sequelize.literal('uuid_generate_v4()'),
         },
-        title: { type: Sequelize.STRING, allowNull: false },
-        discription: { type: Sequelize.STRING, allowNull: false },
-        is_read: { type: Sequelize.BOOLEAN, defaultValue: false },
-        user_id: {
+        message: { type: Sequelize.TEXT, allowNull: false },
+        to_user_id: {
           type: Sequelize.UUID,
           onDelete: 'CASCADE',
           onUpdate: 'CASCADE',
@@ -21,9 +19,22 @@ module.exports = {
               tableName: 'users',
             },
             key: 'id',
-            as: 'user_id',
+            as: 'to_user_id',
           },
         },
+        from_user_id: {
+          type: Sequelize.UUID,
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE',
+          references: {
+            model: {
+              tableName: 'users',
+            },
+            key: 'id',
+            as: 'from_user_id',
+          },
+        },
+        is_read: { type: Sequelize.BOOLEAN, defaultValue: false },
         created_at: { type: Sequelize.DATE, allowNull: false },
         updated_at: { type: Sequelize.DATE, allowNull: false },
         deleted_at: { type: Sequelize.DATE },
@@ -32,6 +43,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return Promise.all([await queryInterface.dropTable('notifications')]);
+    return Promise.all([await queryInterface.dropTable('chats')]);
   },
 };

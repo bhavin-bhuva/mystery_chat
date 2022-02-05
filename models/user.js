@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.init(
     {
-      id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+      id: { type: DataTypes.UUID, primaryKey: true },
       firstName: { type: DataTypes.STRING, allowNull: false },
       lastName: { type: DataTypes.STRING, allowNull: true },
       email: { type: DataTypes.STRING, allowNull: false },
@@ -49,8 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       resetOtp: { type: DataTypes.STRING },
       deviceInformation: { type: DataTypes.JSONB },
       roleId: {
-        type: DataTypes.STRING,
-        type: DataTypes.BIGINT,
+        type: DataTypes.UUID,
         references: { model: 'Role', key: 'id' },
       },
     },

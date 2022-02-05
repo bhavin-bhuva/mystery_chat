@@ -3,6 +3,11 @@
 const bcrypt = require('bcryptjs');
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    const roleUser = await queryInterface.sequelize.query('SELECT * FROM "roles" WHERE name = ? limit 1', {
+      replacements: ['user'],
+      type: queryInterface.sequelize.QueryTypes.SELECT,
+    });
+
     await queryInterface.bulkInsert(
       'users',
       [
@@ -11,7 +16,7 @@ module.exports = {
           last_name: 'Gomez',
           email: 'hermangomez@mysterychat.com',
           password: bcrypt.hashSync('sample', 10),
-          role_id: 2,
+          role_id: roleUser[0].id || null,
           created_at: new Date(),
           updated_at: new Date(),
         },
@@ -20,7 +25,7 @@ module.exports = {
           last_name: 'Jones',
           email: 'callie@mysterychat.com',
           password: bcrypt.hashSync('sample', 10),
-          role_id: 2,
+          role_id: roleUser[0].id || null,
           created_at: new Date(),
           updated_at: new Date(),
         },
@@ -29,7 +34,7 @@ module.exports = {
           last_name: 'Cross',
           email: 'earl@mysterychat.com',
           password: bcrypt.hashSync('sample', 10),
-          role_id: 2,
+          role_id: roleUser[0].id || null,
           created_at: new Date(),
           updated_at: new Date(),
         },
@@ -38,7 +43,7 @@ module.exports = {
           last_name: 'Burns',
           email: 'frances@mysterychat.com',
           password: bcrypt.hashSync('sample', 10),
-          role_id: 2,
+          role_id: roleUser[0].id || null,
           created_at: new Date(),
           updated_at: new Date(),
         },
@@ -47,7 +52,7 @@ module.exports = {
           last_name: 'Cox',
           email: 'mario@mysterychat.com',
           password: bcrypt.hashSync('sample', 10),
-          role_id: 2,
+          role_id: roleUser[0].id || null,
           created_at: new Date(),
           updated_at: new Date(),
         },
@@ -56,7 +61,7 @@ module.exports = {
           last_name: 'Johnson',
           email: 'christine@mysterychat.com',
           password: bcrypt.hashSync('sample', 10),
-          role_id: 2,
+          role_id: roleUser[0].id || null,
           created_at: new Date(),
           updated_at: new Date(),
         },
@@ -65,7 +70,7 @@ module.exports = {
           last_name: 'Sherman',
           email: 'adelaide@mysterychat.com',
           password: bcrypt.hashSync('sample', 10),
-          role_id: 2,
+          role_id: roleUser[0].id || null,
           created_at: new Date(),
           updated_at: new Date(),
         },
@@ -74,7 +79,7 @@ module.exports = {
           last_name: 'Curtis',
           email: 'hulda@mysterychat.com',
           password: bcrypt.hashSync('sample', 10),
-          role_id: 2,
+          role_id: roleUser[0].id || null,
           created_at: new Date(),
           updated_at: new Date(),
         },

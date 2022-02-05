@@ -4,44 +4,48 @@ const moment = require('moment');
 // moment().utcOffset('+05:30').format();
 
 module.exports = (sequelize, DataTypes) => {
-  class Notification extends Model {
+  class Chat extends Model {
     static allAttributes(arr = null) {
-      let basicAttributesArr = ['id', 'title', 'discription', 'isRead', 'userId', 'createdAt', 'updatedAt'];
+      let basicAttributesArr = ['id', 'message', 'isRead', 'toUserId', 'createdAt', 'updatedAt'];
 
       return arr ? basicAttributesArr.concat(arr) : basicAttributesArr;
     }
     static basicAttributes(arr = null) {
-      let basicAttributesArr = ['id', 'title', 'discription', 'isRead', 'createdAt'];
+      let basicAttributesArr = ['id', 'message', 'isRead', 'createdAt'];
 
       return arr ? basicAttributesArr.concat(arr) : basicAttributesArr;
     }
     static associate(models) {
-      Notification.User = Notification.belongsTo(models.User, {
+      Chat.User = Chat.belongsTo(models.User, {
         as: 'user',
-        foreignKey: Notification.userId,
+        foreignKey: Chat.toUserId,
       });
     }
   }
 
-  Notification.init(
+  Chat.init(
     {
       id: { type: DataTypes.UUID, primaryKey: true },
       title: { type: DataTypes.STRING, allowNull: false },
-      discription: { type: DataTypes.STRING, allowNull: false },
-      isRead: { type: DataTypes.BOOLEAN, defaultValue: false },
-      userId: {
+      message: { type: DataTypes.TEXT, allowNull: false },
+      toUserId: {
         type: DataTypes.UUID,
         references: { model: 'User', key: 'id' },
       },
+      fromUserId: {
+        type: DataTypes.UUID,
+        references: { model: 'User', key: 'id' },
+      },
+      isRead: { type: DataTypes.BOOLEAN, defaultValue: false },
     },
     {
       sequelize,
       underscored: true,
       paranoid: true,
-      modelName: 'Notification',
-      tableName: 'notifications',
+      modelName: 'Chat',
+      tableName: 'chats',
     }
   );
 
-  return Notification;
+  return Chat;
 };

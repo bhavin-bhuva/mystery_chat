@@ -3,7 +3,7 @@
     "host": "localhost",
     "database": "mystery_chat",
     "username": "postgres",
-    "password": "root",
+    "password": "postgres",
     "port": 5432,
     "dialect": "postgres",
     "logging": true,
