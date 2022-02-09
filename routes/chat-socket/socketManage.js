@@ -1,71 +1,56 @@
 const events = require('./events');
 const methods = require('./methods');
-let users = {};
-let chatsList = ['Community'];
-let communityChat = methods.createChat();
-let chats = [communityChat];
+const chatService = require('./chat-services');
+let users = [];
 
 module.exports = (io) => (socket) => {
-  socket.on(events.IS_USER, (nickname, cb) => {
-    methods.isUser(users, nickname)
-      ? cb({ isUser: true, user: null })
-      : cb({ isUser: false, user: methods.createUser(nickname, socket.id) });
-  });
+  socket.emit(
+    events.SUCCESS,
+    'Welcome to Myster Chat ! ' + socket.currentUser.firstName + ' ' + socket.currentUser.lastName
+  );
 
-  socket.on(events.NEW_USER, (user) => {
-    users = methods.addUsers(users, user);
-    socket.user = user;
-    io.emit(events.NEW_USER, { newUsers: users });
-  });
+  for (let [id, socket] of io.of('/').sockets) {
+    users.push({
+      socketId: id,
+      uid: socket.currentUser.id,
+      firstName: socket.currentUser.firstName,
+      lastName: socket.currentUser.lastName,
+      contactNumber: socket.currentUser.contactNumber,
+      email: socket.currentUser.email,
+    });
+  }
 
-  socket.on(events.INIT_CHATS, (cb) => {
-    cb(chats);
-  });
+  socket.emit(events.ONLINE_USERS, users);
 
-  socket.on(events.LOGOUT, () => {
-    users = methods.delUser(users, socket.user.nickname);
-    io.emit(events.LOGOUT, { newUsers: users, outUser: socket.user.nickname });
-  });
-
-  socket.on('disconnect', () => {
-    if (socket.user) {
-      users = methods.delUser(users, socket.user.nickname);
-      io.emit(events.LOGOUT, { newUsers: users, outUser: socket.user.nickname });
+  socket.on(events.RECENT_CONNECTS, async (payload) => {
+    try {
+      await chatService
+        .getRecentUsers({ userId: socket.currentUser.id, search: payload.search })
+        .then(async (result) => {
+          socket.emit(events.RECENT_CONNECTS, result);
+        });
+    } catch (err) {
+      socket.emit(events.ERROR, new Error(err).message);
     }
   });
 
-  socket.on(events.MESSAGE_SEND, ({ channel, msg }) => {
-    let message = methods.createMessage(msg, socket.user.nickname);
-    io.emit(events.MESSAGE_SEND, { channel, message });
-  });
+  socket.on(events.MESSAGE, async (payload) => {
+    try {
+      await chatService.createChat(socket.currentUser, payload).then(async (result) => {
+        const oppositeUserSID = filterUsers(payload.toUserId).map((u) => u.socketId);
+        socket.broadcast.to(oppositeUserSID).emit(events.MESSAGE, result);
 
-  socket.on(events.TYPING, ({ channel, isTyping }) => {
-    socket.user && io.emit(events.TYPING, { channel, isTyping, sender: socket.user.nickname });
-  });
-
-  socket.on(events.P_MESSAGE_SEND, ({ receiver, msg }) => {
-    if (socket.user) {
-      let sender = socket.user.nickname;
-      let message = methods.createMessage(msg, sender);
-      socket.to(receiver.socketId).emit(events.P_MESSAGE_SEND, { channel: sender, message });
-      socket.emit(events.P_MESSAGE_SEND, { channel: receiver.nickname, message });
+        // sending updated contact list
+        await chatService.getRecentUsers({ userId: payload.toUserId }).then(async (result) => {
+          socket.broadcast.to(oppositeUserSID).emit(events.RECENT_CONNECTS, result);
+        });
+      });
+    } catch (err) {
+      socket.emit(events.ERROR, new Error(err).message);
     }
   });
 
-  socket.on(events.P_TYPING, ({ receiver, isTyping }) => {
-    let sender = socket.user.nickname;
-    socket.to(receiver).emit(events.P_TYPING, { channel: sender, isTyping });
-  });
-
-  socket.on(events.CHECK_CHANNEL, ({ channelName, channelDescription }, cb) => {
-    if (methods.isChannel(channelName, chatsList)) {
-      cb(true);
-    } else {
-      let newChat = methods.createChat({ name: channelName, description: channelDescription });
-      chatsList.push(channelName);
-      chats.push(newChat);
-      io.emit(events.CREATE_CHANNEL, newChat);
-      cb(false);
-    }
-  });
+  const filterUsers = (match, field = 'uid') => {
+    return users.filter((user) => user[field] === match);
+  };
 };

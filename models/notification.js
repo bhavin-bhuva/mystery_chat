@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Notification.init(
     {
-      id: { type: DataTypes.UUID, primaryKey: true },
+      id: { type: DataTypes.UUID, primaryKey: true, defaultValue: sequelize.literal('uuid_generate_v4()') },
       title: { type: DataTypes.STRING, allowNull: false },
       discription: { type: DataTypes.STRING, allowNull: false },
       isRead: { type: DataTypes.BOOLEAN, defaultValue: false },

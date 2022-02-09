@@ -17,16 +17,19 @@ module.exports = (sequelize, DataTypes) => {
     }
     static associate(models) {
       Chat.User = Chat.belongsTo(models.User, {
-        as: 'user',
+        as: 'toUser',
         foreignKey: Chat.toUserId,
+      });
+      Chat.User = Chat.belongsTo(models.User, {
+        as: 'fromUser',
+        foreignKey: Chat.fromUserId,
       });
     }
   }
 
   Chat.init(
     {
-      id: { type: DataTypes.UUID, primaryKey: true },
-      title: { type: DataTypes.STRING, allowNull: false },
+      id: { type: DataTypes.UUID, primaryKey: true, defaultValue: sequelize.literal('uuid_generate_v4()') },
       message: { type: DataTypes.TEXT, allowNull: false },
       toUserId: {
         type: DataTypes.UUID,

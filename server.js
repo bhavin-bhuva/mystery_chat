@@ -7,13 +7,24 @@ const port = process.env.PORT || 3000;
 var server = require('http').Server(app);
 const io = require('socket.io')(server);
 const socketManage = require('./routes/chat-socket/socketManage')(io);
+const jwtSocket = require('jsonwebtoken');
 
 const publicRoutes = [/\/auth\/*/, '/user/register'];
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-io.on('connection', socketManage);
+io.use(function (socket, next) {
+  if (socket.handshake.headers && socket.handshake.headers.auth) {
+    jwtSocket.verify(socket.handshake.headers.auth, process.env.JWT, function (err, decoded) {
+      if (err) return next(new Error('Authentication error'));
+      socket.currentUser = decoded;
+      next();
+    });
+  } else {
+    next(new Error('Authentication error'));
+  }
+}).on('connection', socketManage);
 
 app.use(
   jwt({

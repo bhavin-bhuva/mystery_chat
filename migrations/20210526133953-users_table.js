@@ -31,7 +31,7 @@ module.exports = {
         contact_number: { type: Sequelize.STRING },
         password: { type: Sequelize.STRING },
         reset_otp: { type: Sequelize.STRING },
-        profle_url: { type: Sequelize.STRING },
+        profile_url: { type: Sequelize.STRING },
         device_information: { type: Sequelize.JSONB },
         role_id: {
           type: Sequelize.UUID,

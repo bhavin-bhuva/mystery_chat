@@ -33,7 +33,7 @@ module.exports = {
         {
           first_name: 'admin',
           last_name: 'admin',
-          email: 'admin@santokibate.com',
+          email: 'admin@mysterychat.com',
           password: bcrypt.hashSync('sample', 10),
           role_id: roleId || null,
           created_at: new Date(),
