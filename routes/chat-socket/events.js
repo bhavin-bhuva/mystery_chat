@@ -7,4 +7,5 @@ module.exports = {
   ERROR: 'error',
   TYPING: 'typing',
   ONLINE_USERS: 'onlineUsers',
+  NOTIFICTION: 'notification',
 };

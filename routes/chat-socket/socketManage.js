@@ -1,9 +1,10 @@
 const events = require('./events');
-const methods = require('./methods');
 const chatService = require('./chat-services');
 let users = [];
 
 module.exports = (io) => (socket) => {
+  chatService.onConnectionStateChange(socket, users);
+
   socket.emit(
     events.SUCCESS,
     'Welcome to Myster Chat ! ' + socket.currentUser.firstName + ' ' + socket.currentUser.lastName

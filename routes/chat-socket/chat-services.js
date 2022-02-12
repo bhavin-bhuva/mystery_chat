@@ -4,6 +4,37 @@ const { Chat, User, sequelize } = require('../../models');
 const events = require('./events');
 const { page } = require('../../helper/pagination');
 
+const onConnectionStateChange = (socket, users) => {
+  socket.on('connect', async () => {
+    // find user and update socketId
+    users.push({
+      socketId: id,
+      uid: socket.currentUser.id,
+      firstName: socket.currentUser.firstName,
+      lastName: socket.currentUser.lastName,
+      contactNumber: socket.currentUser.contactNumber,
+      email: socket.currentUser.email,
+    });
+    const index = users.findIndex((user) => user.uid === socket.data.user.id);
+    if (index > -1) {
+      users[index].socketId = socket.id;
+    }
+    socket.emit(EVENT_TYPES.RECONNCTED, {
+      user: socket.currentUser.id,
+      name: socket.currentUser.firstName + ' ' + socket.currentUser.lastName,
+    });
+  });
+
+  socket.on('disconnect', async () => {
+    const index = users.findIndex((user) => user.socketId === socket.id);
+    if (index > -1) users.splice(index, 1);
+    socket.emit(EVENT_TYPES.DISCONNECTED, {
+      user: socket.currentUser.id,
+      name: socket.currentUser.firstName + ' ' + socket.currentUser.lastName,
+    });
+  });
+};
+
 const getRecentUsers = async ({ userId, search }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -118,7 +149,56 @@ const createChat = async (currentUser, payload) => {
   }
 };
 
+const recentChat = async (currentUser, payload) => {
+  try {
+    const chatAtributes = ['message', 'createdAt', 'fromUserId', 'toUserId', 'isRead'];
+    const chatWhere = {
+      [Op.and]: [
+        {
+          [Op.or]: [{ fromUserId: currentUser.id }, { toUserId: currentUser.id }],
+        },
+        {
+          [Op.or]: [{ fromUserId: payload.id }, { toUserId: payload.id }],
+        },
+      ],
+    };
+
+    const chatInclude = [
+      {
+        model: User,
+        as: 'toUser',
+        attributes: ['id', 'firstName', 'lastName'],
+      },
+      {
+        model: User,
+        as: 'fromUser',
+        attributes: ['id', 'firstName', 'lastName'],
+      },
+    ];
+
+    const chatOps = {
+      attributes: chatAtributes,
+      limit: page(payload).limit,
+      offset: page(payload).offset,
+      required: true,
+      where: chatWhere,
+      order: [['created_at', 'desc']],
+      include: chatInclude,
+    };
+
+    return new Promise(async (resolve, reject) => {
+      await Chat.findAll(chatOps)
+        .then((chats) => resolve(chats))
+        .catch((err) => reject(err));
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
 module.exports = {
   getRecentUsers,
   createChat,
+  recentChat,
+  onConnectionStateChange,
 };
