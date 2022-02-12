@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       lastName: { type: DataTypes.STRING, allowNull: true },
       email: { type: DataTypes.STRING, allowNull: false },
       contactNumber: { type: DataTypes.STRING },
+      profileUrl: { type: DataTypes.STRING },
       password: {
         type: DataTypes.STRING,
         set(value) {

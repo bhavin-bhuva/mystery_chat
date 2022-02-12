@@ -9,6 +9,6 @@ module.exports = {
   TYPING: 'typing',
   ONLINE_USERS: 'onlineUsers',
   NOTIFICTION: 'notification',
-  RECONNCTED: 'reconncted',
+  RECONNCTED: 'reconnected',
   DISCONNECTED: 'disconnected',
 };
