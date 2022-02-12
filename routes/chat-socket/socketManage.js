@@ -3,7 +3,7 @@ const chatService = require('./chat-services');
 let users = [];
 
 module.exports = (io) => (socket) => {
-  chatService.onConnectionStateChange(socket, users);
+  users = chatService.onConnectionStateChange(socket, users);
 
   socket.emit(
     events.SUCCESS,
@@ -46,6 +46,14 @@ module.exports = (io) => (socket) => {
           socket.broadcast.to(oppositeUserSID).emit(events.RECENT_CONNECTS, result);
         });
       });
+    } catch (err) {
+      socket.emit(events.ERROR, new Error(err).message);
+    }
+  });
+
+  socket.on(events.RECENT_CHATS, async (payload) => {
+    try {
+      await chatService.recentChat(socket.currentUser, payload).then(async (result) => {});
     } catch (err) {
       socket.emit(events.ERROR, new Error(err).message);
     }

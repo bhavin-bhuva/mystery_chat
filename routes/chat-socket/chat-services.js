@@ -19,19 +19,24 @@ const onConnectionStateChange = (socket, users) => {
     if (index > -1) {
       users[index].socketId = socket.id;
     }
-    socket.emit(EVENT_TYPES.RECONNCTED, {
+
+    socket.emit(events.RECONNCTED, {
       user: socket.currentUser.id,
       name: socket.currentUser.firstName + ' ' + socket.currentUser.lastName,
     });
+
+    return users;
   });
 
   socket.on('disconnect', async () => {
     const index = users.findIndex((user) => user.socketId === socket.id);
     if (index > -1) users.splice(index, 1);
-    socket.emit(EVENT_TYPES.DISCONNECTED, {
+    socket.emit(events.DISCONNECTED, {
       user: socket.currentUser.id,
       name: socket.currentUser.firstName + ' ' + socket.currentUser.lastName,
     });
+
+    return users;
   });
 };
 
@@ -158,7 +163,7 @@ const recentChat = async (currentUser, payload) => {
           [Op.or]: [{ fromUserId: currentUser.id }, { toUserId: currentUser.id }],
         },
         {
-          [Op.or]: [{ fromUserId: payload.id }, { toUserId: payload.id }],
+          [Op.or]: [{ fromUserId: payload.userId }, { toUserId: payload.userId }],
         },
       ],
     };
