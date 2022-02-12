@@ -9,18 +9,21 @@
     "logging": true,
     "migrationStorageTableName": "sequelize_meta"
   },
-  "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
-  },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "host": "mystery-chat-instance-1.cnjx7qylgsjo.us-east-2.rds.amazonaws.com",
+    "database": "mystery_chat",
+    "username": "postgres",
+    "password": "Mmj6)[d3jA8X(G+s",
+    "port": 5432,
+    "dialect": "postgres",
+    "logging": false,
+    "ssl": true,
+    "migrationStorageTableName": "sequelize_meta",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   }
 }
