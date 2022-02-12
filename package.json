@@ -7,11 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "NODE_ENV=local nodemon server.js",
     "start": "NODE_ENV=production node server.js",
-    "watch:win": "set NODE_ENV=local && nodemon start",
-    "start:win": "set NODE_ENV=local && node server.js",
     "start-production": "node server.js",
-    "start-pm2": "sudo pm2 start server.js --name app",
-    "deploy": "serverless deploy",
     "pretty": "prettier --write \"./**/*.{js,jsx,json}\"",
     "kill-port": "sudo kill -9 $(sudo lsof -t -i:8081)"
   },
