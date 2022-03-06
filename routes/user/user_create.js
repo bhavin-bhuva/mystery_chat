@@ -13,7 +13,6 @@ const postUserRule = {
   email: 'required|email',
   contactNumber: 'required|string',
   gender: 'required|string',
-  password: 'required|string',
 };
 
 module.exports = async (req, res) => {

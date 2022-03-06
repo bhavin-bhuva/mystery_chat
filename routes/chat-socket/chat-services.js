@@ -4,42 +4,6 @@ const { Chat, User, sequelize } = require('../../models');
 const events = require('./events');
 const { page } = require('../../helper/pagination');
 
-const onConnectionStateChange = (socket, users) => {
-  socket.on('connect', async () => {
-    // find user and update socketId
-    users.push({
-      socketId: id,
-      uid: socket.currentUser.id,
-      firstName: socket.currentUser.firstName,
-      lastName: socket.currentUser.lastName,
-      contactNumber: socket.currentUser.contactNumber,
-      email: socket.currentUser.email,
-    });
-    const index = users.findIndex((user) => user.uid === socket.data.user.id);
-    if (index > -1) {
-      users[index].socketId = socket.id;
-    }
-
-    socket.emit(events.RECONNCTED, {
-      user: socket.currentUser.id,
-      name: socket.currentUser.firstName + ' ' + socket.currentUser.lastName,
-    });
-
-    return users;
-  });
-
-  socket.on('disconnect', async () => {
-    const index = users.findIndex((user) => user.socketId === socket.id);
-    if (index > -1) users.splice(index, 1);
-    socket.emit(events.DISCONNECTED, {
-      user: socket.currentUser.id,
-      name: socket.currentUser.firstName + ' ' + socket.currentUser.lastName,
-    });
-
-    return users;
-  });
-};
-
 const getRecentUsers = async ({ userId, search }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -205,5 +169,4 @@ module.exports = {
   getRecentUsers,
   createChat,
   recentChat,
-  onConnectionStateChange,
 };
