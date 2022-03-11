@@ -15,8 +15,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 io.use(function (socket, next) {
-  if (socket.handshake.headers && socket.handshake.headers.authorization) {
-    jwtSocket.verify(socket.handshake.headers.authorization, process.env.JWT, function (err, decoded) {
+  if (socket.handshake.auth.token) {
+    jwtSocket.verify(socket.handshake.auth.token, process.env.JWT, function (err, decoded) {
       if (err) return next(new Error('Authentication error'));
       socket.currentUser = decoded;
       next();
