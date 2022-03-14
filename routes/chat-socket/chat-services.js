@@ -85,6 +85,8 @@ const getRecentUsers = async ({ userId, search }) => {
               users.first_name ilike '%${search ? search : ''}%' 
               OR users.last_name ilike '%${search ? search : ''}%'
             )
+          ORDER BY 
+            chatsFromUsers.created_at
           `
         )
         .then((data) => resolve(data[0]))
