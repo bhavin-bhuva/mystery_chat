@@ -120,7 +120,7 @@ const createChat = async (currentUser, payload) => {
 
 const recentChat = async (currentUser, payload) => {
   try {
-    const chatAtributes = ['message', 'createdAt', 'fromUserId', 'toUserId', 'isRead'];
+    const chatAtributes = ['id', 'message', 'createdAt', 'fromUserId', 'toUserId', 'isRead'];
     const chatWhere = {
       [Op.and]: [
         {
