@@ -10,10 +10,10 @@
     "migrationStorageTableName": "sequelize_meta"
   },
   "production": {
-    "host": "mystery-chat-instance-1.cnjx7qylgsjo.us-east-2.rds.amazonaws.com",
-    "database": "mystery_chat",
-    "username": "postgres",
-    "password": "Mmj6)[d3jA8X(G+s",
+    "host": "ec2-54-80-123-146.compute-1.amazonaws.com",
+    "database": "dtqssei7iddla",
+    "username": "lkcfdtmiwximrg",
+    "password": "fef4a5e16b3aca76f76740dfd4d350f70c2700811b4a4b0cd69c6bd95eb12920",
     "port": 5432,
     "dialect": "postgres",
     "logging": false,
