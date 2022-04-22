@@ -69,9 +69,12 @@ module.exports = (io) => (socket) => {
         const oppositeUserSID = filterUsers(payload.toUserId).map((u) => u.socketId);
         socket.broadcast.to(oppositeUserSID).emit(events.MESSAGE, result);
 
+        console.log('MESSAGE: ' + oppositeUserSID);
+
         // sending updated contact list
         await chatService.getRecentUsers({ userId: payload.toUserId }).then(async (result) => {
           socket.broadcast.to(oppositeUserSID).emit(events.RECENT_CONNECTS, result);
+          console.log('RECENT_CONNECTS: ' + oppositeUserSID);
         });
       });
     } catch (err) {
